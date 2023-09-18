@@ -18,6 +18,8 @@ use crate::{
 
 use uuid::Uuid;
 
+use super::{u256, i256};
+
 #[derive(Clone, Debug)]
 pub enum ValueRef<'a> {
     Bool(bool),
@@ -26,11 +28,13 @@ pub enum ValueRef<'a> {
     UInt32(u32),
     UInt64(u64),
     UInt128(u128),
+    UInt256(u256),
     Int8(i8),
     Int16(i16),
     Int32(i32),
     Int64(i64),
     Int128(i128),
+    Int256(i256),
     String(&'a [u8]),
     Float32(f32),
     Float64(f64),
@@ -61,11 +65,13 @@ impl<'a> Hash for ValueRef<'a> {
             Self::Int32(i) => i.hash(state),
             Self::Int64(i) => i.hash(state),
             Self::Int128(i) => i.hash(state),
+            Self::Int256(i) => i.hash(state),
             Self::UInt8(i) => i.hash(state),
             Self::UInt16(i) => i.hash(state),
             Self::UInt32(i) => i.hash(state),
             Self::UInt64(i) => i.hash(state),
             Self::UInt128(i) => i.hash(state),
+            Self::UInt256(i) => i.hash(state),
             _ => unimplemented!(),
         }
     }
@@ -81,11 +87,13 @@ impl<'a> PartialEq for ValueRef<'a> {
             (ValueRef::UInt32(a), ValueRef::UInt32(b)) => *a == *b,
             (ValueRef::UInt64(a), ValueRef::UInt64(b)) => *a == *b,
             (ValueRef::UInt128(a), ValueRef::UInt128(b)) => *a == *b,
+            (ValueRef::UInt256(a), ValueRef::UInt256(b)) => *a == *b,
             (ValueRef::Int8(a), ValueRef::Int8(b)) => *a == *b,
             (ValueRef::Int16(a), ValueRef::Int16(b)) => *a == *b,
             (ValueRef::Int32(a), ValueRef::Int32(b)) => *a == *b,
             (ValueRef::Int64(a), ValueRef::Int64(b)) => *a == *b,
             (ValueRef::Int128(a), ValueRef::Int128(b)) => *a == *b,
+            (ValueRef::Int256(a), ValueRef::Int256(b)) => *a == *b,
             (ValueRef::String(a), ValueRef::String(b)) => *a == *b,
             (ValueRef::Float32(a), ValueRef::Float32(b)) => *a == *b,
             (ValueRef::Float64(a), ValueRef::Float64(b)) => *a == *b,
@@ -129,11 +137,13 @@ impl<'a> fmt::Display for ValueRef<'a> {
             ValueRef::UInt32(v) => fmt::Display::fmt(v, f),
             ValueRef::UInt64(v) => fmt::Display::fmt(v, f),
             ValueRef::UInt128(v) => fmt::Display::fmt(v, f),
+            ValueRef::UInt256(v) => fmt::Display::fmt(v, f),
             ValueRef::Int8(v) => fmt::Display::fmt(v, f),
             ValueRef::Int16(v) => fmt::Display::fmt(v, f),
             ValueRef::Int32(v) => fmt::Display::fmt(v, f),
             ValueRef::Int64(v) => fmt::Display::fmt(v, f),
             ValueRef::Int128(v) => fmt::Display::fmt(v, f),
+            ValueRef::Int256(v) => fmt::Display::fmt(v, f),
             ValueRef::String(v) => match str::from_utf8(v) {
                 Ok(s) => fmt::Display::fmt(s, f),
                 Err(_) => write!(f, "{:?}", *v),
@@ -208,11 +218,13 @@ impl<'a> convert::From<ValueRef<'a>> for SqlType {
             ValueRef::UInt32(_) => SqlType::UInt32,
             ValueRef::UInt64(_) => SqlType::UInt64,
             ValueRef::UInt128(_) => SqlType::UInt128,
+            ValueRef::UInt256(_) => SqlType::UInt256,
             ValueRef::Int8(_) => SqlType::Int8,
             ValueRef::Int16(_) => SqlType::Int16,
             ValueRef::Int32(_) => SqlType::Int32,
             ValueRef::Int64(_) => SqlType::Int64,
             ValueRef::Int128(_) => SqlType::Int128,
+            ValueRef::Int256(_) => SqlType::Int256,
             ValueRef::String(_) => SqlType::String,
             ValueRef::Float32(_) => SqlType::Float32,
             ValueRef::Float64(_) => SqlType::Float64,
@@ -276,11 +288,13 @@ impl<'a> From<ValueRef<'a>> for Value {
             ValueRef::UInt32(v) => Value::UInt32(v),
             ValueRef::UInt64(v) => Value::UInt64(v),
             ValueRef::UInt128(v) => Value::UInt128(v),
+            ValueRef::UInt256(v) => Value::UInt256(v),
             ValueRef::Int8(v) => Value::Int8(v),
             ValueRef::Int16(v) => Value::Int16(v),
             ValueRef::Int32(v) => Value::Int32(v),
             ValueRef::Int64(v) => Value::Int64(v),
             ValueRef::Int128(v) => Value::Int128(v),
+            ValueRef::Int256(v) => Value::Int256(v),
             ValueRef::String(v) => Value::String(Arc::new(v.into())),
             ValueRef::Float32(v) => Value::Float32(v),
             ValueRef::Float64(v) => Value::Float64(v),
@@ -353,12 +367,14 @@ from_number! {
     u32: UInt32,
     u64: UInt64,
     u128: UInt128,
+    u256: UInt256,
 
     i8: Int8,
     i16: Int16,
     i32: Int32,
     i64: Int64,
     i128: Int128,
+    i256: Int256,
 
     f32: Float32,
     f64: Float64
@@ -373,11 +389,13 @@ impl<'a> From<&'a Value> for ValueRef<'a> {
             Value::UInt32(v) => ValueRef::UInt32(*v),
             Value::UInt64(v) => ValueRef::UInt64(*v),
             Value::UInt128(v) => ValueRef::UInt128(*v),
+            Value::UInt256(v) => ValueRef::UInt256(*v),
             Value::Int8(v) => ValueRef::Int8(*v),
             Value::Int16(v) => ValueRef::Int16(*v),
             Value::Int32(v) => ValueRef::Int32(*v),
             Value::Int64(v) => ValueRef::Int64(*v),
             Value::Int128(v) => ValueRef::Int128(*v),
+            Value::Int256(v) => ValueRef::Int256(*v),
             Value::String(v) => ValueRef::String(v),
             Value::Float32(v) => ValueRef::Float32(*v),
             Value::Float64(v) => ValueRef::Float64(*v),
@@ -492,12 +510,14 @@ value_from! {
     u32: UInt32,
     u64: UInt64,
     u128: UInt128,
+    u256: UInt256,
 
     i8: Int8,
     i16: Int16,
     i32: Int32,
     i64: Int64,
     i128: Int128,
+    i256: Int256,
 
     f32: Float32,
     f64: Float64
@@ -505,6 +525,8 @@ value_from! {
 
 #[cfg(test)]
 mod test {
+    use ethnum::{int, uint};
+
     use super::*;
 
     #[test]
@@ -521,12 +543,14 @@ mod test {
         assert_eq!("42".to_string(), format!("{}", ValueRef::UInt32(42)));
         assert_eq!("42".to_string(), format!("{}", ValueRef::UInt64(42)));
         assert_eq!("42".to_string(), format!("{}", ValueRef::UInt128(42)));
+        assert_eq!("42".to_string(), format!("{}", ValueRef::UInt256(uint!("42"))));
 
         assert_eq!("42".to_string(), format!("{}", ValueRef::Int8(42)));
         assert_eq!("42".to_string(), format!("{}", ValueRef::Int16(42)));
         assert_eq!("42".to_string(), format!("{}", ValueRef::Int32(42)));
         assert_eq!("42".to_string(), format!("{}", ValueRef::Int64(42)));
         assert_eq!("42".to_string(), format!("{}", ValueRef::Int128(42)));
+        assert_eq!("42".to_string(), format!("{}", ValueRef::Int256(42.into())));
 
         assert_eq!("42".to_string(), format!("{}", ValueRef::Float32(42.0)));
         assert_eq!("42".to_string(), format!("{}", ValueRef::Float64(42.0)));
@@ -585,7 +609,7 @@ mod test {
     #[test]
     fn test_size_of() {
         use std::mem;
-        assert_eq!(32, mem::size_of::<[ValueRef<'_>; 1]>());
+        assert_eq!(48, mem::size_of::<[ValueRef<'_>; 1]>());
     }
 
     #[test]
@@ -595,12 +619,14 @@ mod test {
         assert_eq!(Value::from(ValueRef::UInt32(42)), Value::UInt32(42));
         assert_eq!(Value::from(ValueRef::UInt64(42)), Value::UInt64(42));
         assert_eq!(Value::from(ValueRef::UInt128(42)), Value::UInt128(42));
+        assert_eq!(Value::from(ValueRef::UInt256(uint!("42"))), Value::UInt256(uint!("42")));
 
         assert_eq!(Value::from(ValueRef::Int8(42)), Value::Int8(42));
         assert_eq!(Value::from(ValueRef::Int16(42)), Value::Int16(42));
         assert_eq!(Value::from(ValueRef::Int32(42)), Value::Int32(42));
         assert_eq!(Value::from(ValueRef::Int64(42)), Value::Int64(42));
         assert_eq!(Value::from(ValueRef::Int128(42)), Value::Int128(42));
+        assert_eq!(Value::from(ValueRef::Int256(int!("42"))), Value::Int256(int!("42")));
 
         assert_eq!(Value::from(ValueRef::Float32(42.0)), Value::Float32(42.0));
         assert_eq!(Value::from(ValueRef::Float64(42.0)), Value::Float64(42.0));
@@ -649,12 +675,14 @@ mod test {
         assert_eq!(SqlType::from(ValueRef::UInt32(42)), SqlType::UInt32);
         assert_eq!(SqlType::from(ValueRef::UInt64(42)), SqlType::UInt64);
         assert_eq!(SqlType::from(ValueRef::UInt128(42)), SqlType::UInt128);
+        assert_eq!(SqlType::from(ValueRef::UInt256(uint!("42"))), SqlType::UInt256);
 
         assert_eq!(SqlType::from(ValueRef::Int8(42)), SqlType::Int8);
         assert_eq!(SqlType::from(ValueRef::Int16(42)), SqlType::Int16);
         assert_eq!(SqlType::from(ValueRef::Int32(42)), SqlType::Int32);
         assert_eq!(SqlType::from(ValueRef::Int64(42)), SqlType::Int64);
         assert_eq!(SqlType::from(ValueRef::Int128(42)), SqlType::Int128);
+        assert_eq!(SqlType::from(ValueRef::Int256(int!("42"))), SqlType::Int256);
 
         assert_eq!(SqlType::from(ValueRef::Float32(42.0)), SqlType::Float32);
         assert_eq!(SqlType::from(ValueRef::Float64(42.0)), SqlType::Float64);

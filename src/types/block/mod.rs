@@ -29,6 +29,8 @@ pub use self::{
     row::{Row, Rows},
 };
 
+use super::{i256, u256};
+
 mod block_info;
 mod builder;
 mod chunk_iterator;
@@ -65,12 +67,14 @@ sliceable! {
     u32: UInt32,
     u64: UInt64,
     u128: UInt128,
+    u256: UInt256,
 
     i8: Int8,
     i16: Int16,
     i32: Int32,
     i64: Int64,
-    i128: Int128
+    i128: Int128,
+    i256: Int256
 }
 
 /// Represents Clickhouse Block

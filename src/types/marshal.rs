@@ -1,3 +1,5 @@
+use super::{i256, u256};
+
 pub trait Marshal {
     fn marshal(&self, scratch: &mut [u8]);
 }
@@ -50,7 +52,6 @@ impl Marshal for u128 {
         scratch[6] = (self >> 48) as u8;
         scratch[7] = (self >> 56) as u8;
 
-
         scratch[8] = (self >> 64) as u8;
         scratch[9] = (self >> 72) as u8;
         scratch[10] = (self >> 80) as u8;
@@ -60,6 +61,50 @@ impl Marshal for u128 {
         scratch[13] = (self >> 104) as u8;
         scratch[14] = (self >> 112) as u8;
         scratch[15] = (self >> 120) as u8;
+    }
+}
+
+impl Marshal for u256 {
+    fn marshal(&self, scratch: &mut [u8]) {
+        scratch[0] = self.0[0] as u8;
+        scratch[1] = (self.0[0] >> 8) as u8;
+        scratch[2] = (self.0[0] >> 16) as u8;
+        scratch[3] = (self.0[0] >> 24) as u8;
+
+        scratch[4] = (self.0[0] >> 32) as u8;
+        scratch[5] = (self.0[0] >> 40) as u8;
+        scratch[6] = (self.0[0] >> 48) as u8;
+        scratch[7] = (self.0[0] >> 56) as u8;
+
+        scratch[8] = (self.0[0] >> 64) as u8;
+        scratch[9] = (self.0[0] >> 72) as u8;
+        scratch[10] = (self.0[0] >> 80) as u8;
+        scratch[11] = (self.0[0] >> 88) as u8;
+
+        scratch[12] = (self.0[0] >> 96) as u8;
+        scratch[13] = (self.0[0] >> 104) as u8;
+        scratch[14] = (self.0[0] >> 112) as u8;
+        scratch[15] = (self.0[0] >> 120) as u8;
+
+        scratch[16] = self.0[1] as u8;
+        scratch[17] = (self.0[1] >> 8) as u8;
+        scratch[18] = (self.0[1] >> 16) as u8;
+        scratch[19] = (self.0[1] >> 24) as u8;
+
+        scratch[20] = (self.0[1] >> 32) as u8;
+        scratch[21] = (self.0[1] >> 40) as u8;
+        scratch[22] = (self.0[1] >> 48) as u8;
+        scratch[23] = (self.0[1] >> 56) as u8;
+
+        scratch[24] = (self.0[1] >> 64) as u8;
+        scratch[25] = (self.0[1] >> 72) as u8;
+        scratch[26] = (self.0[1] >> 80) as u8;
+        scratch[27] = (self.0[1] >> 88) as u8;
+
+        scratch[28] = (self.0[1] >> 96) as u8;
+        scratch[29] = (self.0[1] >> 104) as u8;
+        scratch[30] = (self.0[1] >> 112) as u8;
+        scratch[31] = (self.0[1] >> 120) as u8;
     }
 }
 
@@ -111,7 +156,6 @@ impl Marshal for i128 {
         scratch[6] = (self >> 48) as u8;
         scratch[7] = (self >> 56) as u8;
 
-
         scratch[8] = (self >> 64) as u8;
         scratch[9] = (self >> 72) as u8;
         scratch[10] = (self >> 80) as u8;
@@ -121,6 +165,50 @@ impl Marshal for i128 {
         scratch[13] = (self >> 104) as u8;
         scratch[14] = (self >> 112) as u8;
         scratch[15] = (self >> 120) as u8;
+    }
+}
+
+impl Marshal for i256 {
+    fn marshal(&self, scratch: &mut [u8]) {
+        scratch[0] = self.0[0] as u8;
+        scratch[1] = (self.0[0] >> 8) as u8;
+        scratch[2] = (self.0[0] >> 16) as u8;
+        scratch[3] = (self.0[0] >> 24) as u8;
+
+        scratch[4] = (self.0[0] >> 32) as u8;
+        scratch[5] = (self.0[0] >> 40) as u8;
+        scratch[6] = (self.0[0] >> 48) as u8;
+        scratch[7] = (self.0[0] >> 56) as u8;
+
+        scratch[8] = (self.0[0] >> 64) as u8;
+        scratch[9] = (self.0[0] >> 72) as u8;
+        scratch[10] = (self.0[0] >> 80) as u8;
+        scratch[11] = (self.0[0] >> 88) as u8;
+
+        scratch[12] = (self.0[0] >> 96) as u8;
+        scratch[13] = (self.0[0] >> 104) as u8;
+        scratch[14] = (self.0[0] >> 112) as u8;
+        scratch[15] = (self.0[0] >> 120) as u8;
+
+        scratch[16] = self.0[1] as u8;
+        scratch[17] = (self.0[1] >> 8) as u8;
+        scratch[18] = (self.0[1] >> 16) as u8;
+        scratch[19] = (self.0[1] >> 24) as u8;
+
+        scratch[20] = (self.0[1] >> 32) as u8;
+        scratch[21] = (self.0[1] >> 40) as u8;
+        scratch[22] = (self.0[1] >> 48) as u8;
+        scratch[23] = (self.0[1] >> 56) as u8;
+
+        scratch[24] = (self.0[1] >> 64) as u8;
+        scratch[25] = (self.0[1] >> 72) as u8;
+        scratch[26] = (self.0[1] >> 80) as u8;
+        scratch[27] = (self.0[1] >> 88) as u8;
+
+        scratch[28] = (self.0[1] >> 96) as u8;
+        scratch[29] = (self.0[1] >> 104) as u8;
+        scratch[30] = (self.0[1] >> 112) as u8;
+        scratch[31] = (self.0[1] >> 120) as u8;
     }
 }
 

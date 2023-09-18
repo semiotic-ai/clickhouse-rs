@@ -15,6 +15,8 @@ use crate::{
     },
 };
 
+use super::{u256, i256};
+
 pub type FromSqlResult<T> = Result<T>;
 
 pub trait FromSql<'a>: Sized {
@@ -262,11 +264,13 @@ from_sql_vec_impl! {
     i32: Int32,
     i64: Int64,
     i128: Int128,
+    i256: Int256,
 
     u16: UInt16,
     u32: UInt32,
     u64: UInt64,
     u128: UInt128,
+    u256: UInt256,
 
     f32: Float32,
     f64: Float64
@@ -343,12 +347,14 @@ from_sql_impl! {
     u32: UInt32,
     u64: UInt64,
     u128: UInt128,
+    u256: UInt256,
 
     i8: Int8,
     i16: Int16,
     i32: Int32,
     i64: Int64,
     i128: Int128,
+    i256: Int256,
 
     f32: Float32,
     f64: Float64

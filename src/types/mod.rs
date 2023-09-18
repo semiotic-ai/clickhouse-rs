@@ -18,9 +18,12 @@ pub use self::{
     options::{SettingType, SettingValue},
     query::Query,
     query_result::QueryResult,
+    // int256::{i256, u256},
     value::Value,
     value_ref::ValueRef,
 };
+
+pub use ethnum::{u256, i256};
 
 pub(crate) use self::{
     cmd::Cmd,
@@ -50,6 +53,8 @@ pub(crate) mod query_result;
 mod decimal;
 mod enums;
 mod options;
+
+// pub mod int256;
 
 #[derive(Copy, Clone, Debug, Default, PartialEq)]
 pub(crate) struct Progress {
@@ -92,7 +97,12 @@ impl fmt::Debug for ServerInfo {
         write!(
             f,
             "{} {}.{}.{}.{} ({:?})",
-            self.name, self.major_version, self.minor_version, self.revision, self.patch_version, self.timezone
+            self.name,
+            self.major_version,
+            self.minor_version,
+            self.revision,
+            self.patch_version,
+            self.timezone
         )
     }
 }
@@ -202,11 +212,13 @@ has_sql_type! {
     u32: SqlType::UInt32,
     u64: SqlType::UInt64,
     u128: SqlType::UInt128,
+    u256: SqlType::UInt256,
     i8: SqlType::Int8,
     i16: SqlType::Int16,
     i32: SqlType::Int32,
     i64: SqlType::Int64,
     i128: SqlType::Int128,
+    i256: SqlType::Int256,
     &str: SqlType::String,
     String: SqlType::String,
     f32: SqlType::Float32,
@@ -309,11 +321,13 @@ pub enum SqlType {
     UInt32,
     UInt64,
     UInt128,
+    UInt256,
     Int8,
     Int16,
     Int32,
     Int64,
     Int128,
+    Int256,
     String,
     FixedString(usize),
     Float32,
@@ -377,11 +391,13 @@ impl SqlType {
             SqlType::UInt32 => "UInt32".into(),
             SqlType::UInt64 => "UInt64".into(),
             SqlType::UInt128 => "UInt128".into(),
+            SqlType::UInt256 => "UInt256".into(),
             SqlType::Int8 => "Int8".into(),
             SqlType::Int16 => "Int16".into(),
             SqlType::Int32 => "Int32".into(),
             SqlType::Int64 => "Int64".into(),
             SqlType::Int128 => "Int128".into(),
+            SqlType::Int256 => "Int256".into(),
             SqlType::String => "String".into(),
             SqlType::FixedString(str_len) => format!("FixedString({})", str_len).into(),
             SqlType::Float32 => "Float32".into(),

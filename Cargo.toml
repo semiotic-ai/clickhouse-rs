@@ -35,6 +35,7 @@ uuid = "^1.4"
 combine = "^4.6"
 percent-encoding = "^2.3"
 either = "^1.6"
+ethnum = "1.4.0"
 
 [dependencies.futures-util]
 version = "^0.3"
@@ -78,5 +79,9 @@ rand = "^0.8"
 
 [dev-dependencies.tokio]
 version = "^1.32"
+default-features = false
+features = ["macros"]
+
+[dev-dependencies.ethnum]
 default-features = false
 features = ["macros"]
