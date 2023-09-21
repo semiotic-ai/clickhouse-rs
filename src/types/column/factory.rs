@@ -23,6 +23,7 @@ use crate::{
             fixed_string::FixedStringColumnData,
             ip::{IpColumnData, Ipv4, Ipv6, Uuid},
             list::List,
+            low_cardinality::LowCardinalityColumnData,
             map::MapColumnData,
             nullable::NullableColumnData,
             numeric::VectorColumnData,
@@ -31,7 +32,7 @@ use crate::{
             ArcColumnWrapper, BoxColumnWrapper, ColumnWrapper,
         },
         decimal::NoBits,
-        DateTimeType, SimpleAggFunc, i256, u256,
+        i256, u256, DateTimeType, SimpleAggFunc,
     },
     SqlType,
 };
@@ -84,6 +85,8 @@ impl dyn ColumnData {
             _ => {
                 if let Some(inner_type) = parse_nullable_type(type_name) {
                     W::wrap(NullableColumnData::load(reader, inner_type, size, tz)?)
+                } else if let Some(inner_type) = parse_low_cardinality_type(type_name) {
+                    W::wrap(LowCardinalityColumnData::load(reader, inner_type, size, tz)?)
                 } else if let Some(str_len) = parse_fixed_string(type_name) {
                     W::wrap(FixedStringColumnData::load(reader, size, str_len)?)
                 } else if let Some(inner_type) = parse_array_type(type_name) {
@@ -167,6 +170,13 @@ impl dyn ColumnData {
                 )?,
                 offsets: List::with_capacity(capacity),
             }),
+            SqlType::LowCardinality(inner_type) => W::wrap(LowCardinalityColumnData {
+                inner: <dyn ColumnData>::from_type::<ArcColumnWrapper>(
+                    inner_type.clone(),
+                    timezone,
+                    capacity,
+                )?,
+            }),
             SqlType::SimpleAggregateFunction(func, inner_type) => {
                 W::wrap(SimpleAggregateFunctionColumnData {
                     inner: <dyn ColumnData>::from_type::<ArcColumnWrapper>(
@@ -248,6 +258,20 @@ fn parse_nullable_type(source: &str) -> Option<&str> {
     let inner_type = &source[9..source.len() - 1];
 
     if inner_type.starts_with("Nullable") {
+        return None;
+    }
+
+    Some(inner_type)
+}
+
+fn parse_low_cardinality_type(source: &str) -> Option<&str> {
+    if !source.starts_with("LowCardinality") {
+        return None;
+    }
+
+    let inner_type = &source[9..source.len() - 1];
+
+    if inner_type.starts_with("LowCardinality") {
         return None;
     }
 

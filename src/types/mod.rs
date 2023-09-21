@@ -338,6 +338,7 @@ pub enum SqlType {
     Ipv6,
     Uuid,
     Nullable(&'static SqlType),
+    LowCardinality(&'static SqlType),
     Array(&'static SqlType),
     Decimal(u8, u8),
     Enum8(Vec<(String, i8)>),
@@ -411,6 +412,7 @@ impl SqlType {
             SqlType::Ipv6 => "IPv6".into(),
             SqlType::Uuid => "UUID".into(),
             SqlType::Nullable(nested) => format!("Nullable({})", &nested).into(),
+            SqlType::LowCardinality(nested) => format!("LowCardinality({})", &nested).into(),
             SqlType::SimpleAggregateFunction(func, nested) => {
                 let func_str: &str = func.into();
                 format!("SimpleAggregateFunction({}, {})", func_str, &nested).into()

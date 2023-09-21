@@ -178,6 +178,7 @@ impl Value {
                 Value::DateTime64(0, (1, Tz::Zulu))
             }
             SqlType::SimpleAggregateFunction(_, nested) => Value::default(nested.clone()),
+            SqlType::LowCardinality(nested) => Value::default(nested.clone()),
             SqlType::DateTime(_) => 0_u32.to_date(Tz::Zulu).into(),
             SqlType::Nullable(inner) => Value::Nullable(Either::Left(inner)),
             SqlType::Array(inner) => Value::Array(inner, Arc::new(Vec::default())),
