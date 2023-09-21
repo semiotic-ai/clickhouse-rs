@@ -269,7 +269,7 @@ fn parse_low_cardinality_type(source: &str) -> Option<&str> {
         return None;
     }
 
-    let inner_type = &source[9..source.len() - 1];
+    let inner_type = &source[15..source.len() - 1];
 
     if inner_type.starts_with("LowCardinality") {
         return None;
@@ -560,6 +560,13 @@ mod test {
         assert_eq!(parse_nullable_type("Nullable(Int8)"), Some("Int8"));
         assert_eq!(parse_nullable_type("Int8"), None);
         assert_eq!(parse_nullable_type("Nullable(Nullable(Int8))"), None);
+    }
+
+    #[test]
+    fn test_parse_low_cardinality_type() {
+        assert_eq!(parse_low_cardinality_type("LowCardinality(Int8)"), Some("Int8"));
+        assert_eq!(parse_low_cardinality_type("Int8"), None);
+        assert_eq!(parse_low_cardinality_type("LowCardinality(LowCardinality(Int8))"), None);
     }
 
     #[test]
